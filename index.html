@@ -1,13 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>todolist</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="module" src="/src/js/app.js"></script>
+</head>
+<body>
+    <h1>Todo List</h1>
+    <form>
+        <input type="text" name="contenuto" id="contenuto">
+        <input type="submit" value="Aggiungi" id="add">
+    </form>
+    <h2>Da fare</h2>
+    <ul id="listatodo"></ul>
+    <h2>Cose fatte</h2>
+    <ul id="listadone"></ul>
+</body>
 </html>
