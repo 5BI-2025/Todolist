@@ -18,105 +18,123 @@ function initCalendar(todos, getP, updateViews, switchView) {
   const board = document.getElementById("board");
 
   function getMonthName(date) {
-    return date.toLocaleString('it-IT', { month: 'long' });
+    return date.toLocaleString("it-IT", { month: "long" });
   }
 
   function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    
+
     // Set the header
-    currentMonthEl.textContent = `${getMonthName(currentDate).charAt(0).toUpperCase() + getMonthName(currentDate).slice(1)} ${year}`;
-    
+    currentMonthEl.textContent = `${
+      getMonthName(currentDate).charAt(0).toUpperCase() +
+      getMonthName(currentDate).slice(1)
+    } ${year}`;
+
     // Clear the days container
     calendarDaysEl.innerHTML = "";
-    
+
     // Create the days grid
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    
+
     // Calculate how many empty cells before first day of month
     let firstDayIndex = firstDay.getDay(); // 0 = Sunday
-    
+
     // Create empty cells for days before the first day of the month
     for (let i = 0; i < firstDayIndex; i++) {
       calendarDaysEl.appendChild(
-        el("div", { cls: "h-28 p-1 text-center text-gray-400 border border-gray-100" })
+        el("div", {
+          cls: "h-28 p-1 text-center text-gray-400 border border-gray-100",
+        })
       );
     }
-    
+
     // Filter todos for current view
     const term = (searchInput.value || "").toLowerCase();
     const pref = filterPriority.value || "all";
-    const filteredTodos = todos.filter(i => {
+    const filteredTodos = todos.filter((i) => {
       const matchText =
         i.title.toLowerCase().includes(term) ||
         (i.description && i.description.toLowerCase().includes(term));
       const matchP = pref === "all" || i.priority === pref;
       return matchText && matchP;
     });
-    
+
     // Create days with todos
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD format
-      
-      const todosForDay = filteredTodos.filter(t => t.dueDate === dateStr);
-      
+      const dateStr = date.toISOString().split("T")[0]; // YYYY-MM-DD format
+
+      const todosForDay = filteredTodos.filter((t) => t.dueDate === dateStr);
+
       // Check if this date is in the past
       const today = new Date();
-      today.setHours(0,0,0,0);
-      date.setHours(0,0,0,0);
+      today.setHours(0, 0, 0, 0);
+      date.setHours(0, 0, 0, 0);
       const isPast = date < today;
-      
-      let cellClass = "day-cell h-28 p-1 border border-gray-100 bg-white hover:bg-gray-50 transition-colors overflow-auto";
-      
+
+      let cellClass =
+        "day-cell h-28 p-1 border border-gray-100 bg-white hover:bg-gray-50 transition-colors overflow-auto";
+
       if (todosForDay.length > 0) {
         // Has todos - add a subtle background
         cellClass += " bg-indigo-50";
-        
+
         // If past due and has todos, make it more obvious
         if (isPast) {
           cellClass += " bg-red-50";
         }
       }
-      
+
       const dayCell = el("div", {
         cls: cellClass,
       });
-      
+
       // Add date number
       const dayHeader = el("div", {
         cls: "text-right font-medium text-gray-700 mb-1 sticky top-0 bg-white z-10 p-1",
         text: day.toString(),
       });
       dayCell.appendChild(dayHeader);
-      
+
       // Mark today
       if (
         date.getDate() === new Date().getDate() &&
         date.getMonth() === new Date().getMonth() &&
         date.getFullYear() === new Date().getFullYear()
       ) {
-        dayHeader.classList.add("text-white", "bg-indigo-600", "rounded-full", "w-6", "h-6", "flex", "items-center", "justify-center", "ml-auto");
+        dayHeader.classList.add(
+          "text-white",
+          "bg-indigo-600",
+          "rounded-full",
+          "w-6",
+          "h-6",
+          "flex",
+          "items-center",
+          "justify-center",
+          "ml-auto"
+        );
       }
-      
+
       // Add todos for this day
       if (todosForDay.length) {
-        todosForDay.forEach(todo => {
+        todosForDay.forEach((todo) => {
           const p = getP(todo.priority);
           const todoItem = el("div", {
             cls: `text-xs p-1 mb-1 rounded ${p.bg} ${p.border} truncate cursor-pointer`,
             text: todo.title,
             ds: { id: todo.id },
           });
-          
+
           todoItem.addEventListener("click", () => {
             // Find the appropriate column for this todo and scroll to it
             switchView("board");
             setTimeout(() => {
-              const todoEl = document.querySelector(`.todo-card[data-id="${todo.id}"]`);
+              const todoEl = document.querySelector(
+                `.todo-card[data-id="${todo.id}"]`
+              );
               if (todoEl) {
                 todoEl.scrollIntoView({ behavior: "smooth", block: "center" });
                 todoEl.classList.add("highlighted-todo");
@@ -126,11 +144,11 @@ function initCalendar(todos, getP, updateViews, switchView) {
               }
             }, 300);
           });
-          
+
           dayCell.appendChild(todoItem);
         });
       }
-      
+
       calendarDaysEl.appendChild(dayCell);
     }
   }
@@ -141,21 +159,36 @@ function initCalendar(todos, getP, updateViews, switchView) {
       calendarView.classList.add("hidden");
       viewBoardBtn.classList.add("active", "bg-indigo-100", "text-indigo-700");
       viewBoardBtn.classList.remove("bg-white", "text-gray-700");
-      viewCalendarBtn.classList.remove("active", "bg-indigo-100", "text-indigo-700");
+      viewCalendarBtn.classList.remove(
+        "active",
+        "bg-indigo-100",
+        "text-indigo-700"
+      );
       viewCalendarBtn.classList.add("bg-white", "text-gray-700");
     } else if (view === "calendar") {
       board.classList.add("hidden");
       calendarView.classList.remove("hidden");
-      viewCalendarBtn.classList.add("active", "bg-indigo-100", "text-indigo-700");
+      viewCalendarBtn.classList.add(
+        "active",
+        "bg-indigo-100",
+        "text-indigo-700"
+      );
       viewCalendarBtn.classList.remove("bg-white", "text-gray-700");
-      viewBoardBtn.classList.remove("active", "bg-indigo-100", "text-indigo-700");
+      viewBoardBtn.classList.remove(
+        "active",
+        "bg-indigo-100",
+        "text-indigo-700"
+      );
       viewBoardBtn.classList.add("bg-white", "text-gray-700");
       renderCalendar();
     }
   }
 
   // Helper function for creating elements
-  function el(tag, { cls, html, text, attrs = {}, ds = {}, children = [] } = {}) {
+  function el(
+    tag,
+    { cls, html, text, attrs = {}, ds = {}, children = [] } = {}
+  ) {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
     if (html) n.innerHTML = html;
@@ -182,7 +215,7 @@ function initCalendar(todos, getP, updateViews, switchView) {
   viewCalendarBtn.addEventListener("click", () => handleSwitchView("calendar"));
 
   // Set up CSS for highlighted todos
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
     .view-btn.active {
       font-weight: 600;
@@ -229,7 +262,7 @@ function initCalendar(todos, getP, updateViews, switchView) {
   // Return functions to be used by app.js
   return {
     renderCalendar,
-    switchView: handleSwitchView
+    switchView: handleSwitchView,
   };
 }
 

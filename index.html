@@ -85,7 +85,7 @@
             </button>
           </div>
         </div>
-        
+
         <div class="flex flex-col md:flex-row gap-5 justify-between">
           <div class="flex-1">
             <label for="search" class="block font-medium mb-2 text-gray-700"
@@ -218,7 +218,9 @@
                 name="dueDate"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
               />
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
+              >
                 <i class="far fa-calendar-alt"></i>
               </div>
             </div>
@@ -248,23 +250,31 @@
       id="board"
       class="flex flex-col md:flex-row gap-5 w-full max-w-7xl overflow-x-auto pb-4"
     ></div>
-    
+
     <!-- Calendar View - hidden by default -->
-    <div
-      id="calendar-view"
-      class="w-full max-w-7xl hidden"
-    >
+    <div id="calendar-view" class="w-full max-w-7xl hidden">
       <div class="bg-white rounded-xl shadow-md p-5">
-        <div id="calendar-header" class="flex justify-between items-center mb-4">
-          <button id="prev-month" class="text-gray-600 hover:text-indigo-600 p-2">
+        <div
+          id="calendar-header"
+          class="flex justify-between items-center mb-4"
+        >
+          <button
+            id="prev-month"
+            class="text-gray-600 hover:text-indigo-600 p-2"
+          >
             <i class="fas fa-chevron-left"></i>
           </button>
           <h2 id="current-month" class="text-xl font-bold text-gray-800"></h2>
-          <button id="next-month" class="text-gray-600 hover:text-indigo-600 p-2">
+          <button
+            id="next-month"
+            class="text-gray-600 hover:text-indigo-600 p-2"
+          >
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
-        <div class="grid grid-cols-7 text-center font-medium text-sm text-gray-600 border-b border-gray-200 pb-2 mb-2">
+        <div
+          class="grid grid-cols-7 text-center font-medium text-sm text-gray-600 border-b border-gray-200 pb-2 mb-2"
+        >
           <div>Dom</div>
           <div>Lun</div>
           <div>Mar</div>

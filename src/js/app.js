@@ -42,7 +42,7 @@ const PRIORITIES = {
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
 // Import calendar module
-import { initCalendar } from './calendar.js';
+import { initCalendar } from "./calendar.js";
 
 // =========================
 // DOM refs
@@ -241,20 +241,20 @@ function createTodoCard(todo) {
     cls: `todo-card issue-card bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100 border-l-4 ${p.border}`,
     ds: { id: todo.id },
   });
-  
+
   // If task has a due date that is today or past due, add visual indicator
   if (todo.dueDate) {
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
     const dueDate = new Date(todo.dueDate);
-    dueDate.setHours(0,0,0,0);
-    
+    dueDate.setHours(0, 0, 0, 0);
+
     if (dueDate < today) {
       // Past due
-      card.classList.add('border-t-red-500');
+      card.classList.add("border-t-red-500");
     } else if (dueDate.getTime() === today.getTime()) {
       // Due today
-      card.classList.add('border-t-orange-400');
+      card.classList.add("border-t-orange-400");
     }
   }
   card.draggable = true;
@@ -289,7 +289,7 @@ function createTodoCard(todo) {
       )}`,
     })
   );
-  
+
   if (todo.dueDate) {
     const dueDate = new Date(todo.dueDate);
     card.appendChild(
@@ -363,7 +363,7 @@ function renderBoard() {
 function updateCounters() {
   LISTS.forEach((l) => {
     const c = todos.filter((i) => i.state === l.id).length;
-  const elc = document.getElementById(`${l.id}-count`);
+    const elc = document.getElementById(`${l.id}-count`);
     if (elc) elc.textContent = c;
   });
 }
@@ -492,8 +492,11 @@ form.addEventListener("submit", (e) => {
 function updateViews() {
   renderBoard();
   // Update calendar view if it exists and is visible
-  if (renderCalendar && document.getElementById("calendar-view") && 
-      !document.getElementById("calendar-view").classList.contains('hidden')) {
+  if (
+    renderCalendar &&
+    document.getElementById("calendar-view") &&
+    !document.getElementById("calendar-view").classList.contains("hidden")
+  ) {
     renderCalendar();
   }
 }
@@ -524,7 +527,9 @@ function closeModal() {
   }, 300);
 }
 
-document.getElementById("toggle-new-issue").addEventListener("click", openModal);
+document
+  .getElementById("toggle-new-issue")
+  .addEventListener("click", openModal);
 document.getElementById("modal-close").addEventListener("click", closeModal);
 document.getElementById("modal-cancel").addEventListener("click", closeModal);
 
