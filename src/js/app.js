@@ -41,6 +41,9 @@ const PRIORITIES = {
 
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
+// Import calendar module
+import { initCalendar } from './calendar.js';
+
 // =========================
 // DOM refs
 // =========================
@@ -52,6 +55,9 @@ const board = document.getElementById("board");
 const modal = document.getElementById("modal-new-issue"),
   modalContent = document.getElementById("modal-content"),
   modalOverlay = document.getElementById("modal-overlay");
+
+// Calendar variables that will be initialized later
+let renderCalendar, switchView;
 
 // =========================
 // Helpers
@@ -90,7 +96,7 @@ function createList() {
   LISTS.push(list);
   saveLists();
   renderColumns();
-  renderBoard();
+  updateViews();
 }
 
 function renderColumns() {
@@ -235,6 +241,22 @@ function createTodoCard(todo) {
     cls: `todo-card issue-card bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100 border-l-4 ${p.border}`,
     ds: { id: todo.id },
   });
+  
+  // If task has a due date that is today or past due, add visual indicator
+  if (todo.dueDate) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const dueDate = new Date(todo.dueDate);
+    dueDate.setHours(0,0,0,0);
+    
+    if (dueDate < today) {
+      // Past due
+      card.classList.add('border-t-red-500');
+    } else if (dueDate.getTime() === today.getTime()) {
+      // Due today
+      card.classList.add('border-t-orange-400');
+    }
+  }
   card.draggable = true;
 
   card.appendChild(
@@ -267,6 +289,18 @@ function createTodoCard(todo) {
       )}`,
     })
   );
+  
+  if (todo.dueDate) {
+    const dueDate = new Date(todo.dueDate);
+    card.appendChild(
+      el("div", {
+        cls: "text-xs text-blue-600 mb-3 flex items-center",
+        html: `<i class="fas fa-hourglass-half mr-1"></i> Scadenza: ${dueDate.toLocaleDateString(
+          "it-IT"
+        )}`,
+      })
+    );
+  }
 
   const btnGroup = el("div", { cls: "flex gap-1" });
   const idx = STATES.indexOf(todo.state);
@@ -342,13 +376,13 @@ function moveTodo(id, state) {
   if (!it) return;
   it.state = state;
   saveTodos();
-  renderBoard();
+  updateViews();
 }
 
 function deleteTodo(id) {
   todos = todos.filter((i) => i.id !== id);
   saveTodos();
-  renderBoard();
+  updateViews();
 }
 
 // =========================
@@ -443,18 +477,29 @@ form.addEventListener("submit", (e) => {
     title,
     description: form.description.value.trim(),
     priority: form.priority.value || "medium",
+    dueDate: form.dueDate.value || null,
     state: LISTS[0].id,
   };
   todos.push(newTodo);
   saveTodos();
-  renderBoard();
+  updateViews();
   form.reset();
   form.title.focus();
   closeModal();
 });
 
-searchInput.addEventListener("input", renderBoard);
-filterPriority.addEventListener("change", renderBoard);
+// Update both views when filters change
+function updateViews() {
+  renderBoard();
+  // Update calendar view if it exists and is visible
+  if (renderCalendar && document.getElementById("calendar-view") && 
+      !document.getElementById("calendar-view").classList.contains('hidden')) {
+    renderCalendar();
+  }
+}
+
+searchInput.addEventListener("input", updateViews);
+filterPriority.addEventListener("change", updateViews);
 
 // =========================
 // Modal
@@ -498,3 +543,12 @@ document.addEventListener("keydown", (e) => {
 // Init
 // =========================
 renderBoard();
+
+// Initialize calendar right away as modules are already executed when DOM is ready
+const calendar = initCalendar(todos, getP, updateViews, (view) => {
+  // This callback isn't needed anymore as we get the function directly
+});
+
+// Assign the returned functions to our global variables
+renderCalendar = calendar.renderCalendar;
+switchView = calendar.switchView;
