@@ -44,15 +44,14 @@ let todos = JSON.parse(localStorage.getItem("todos")) || [];
 // =========================
 // DOM refs
 // =========================
-const $ = (id) => document.getElementById(id);
-const form = $("new-issue-form");
-const searchInput = $("search");
-const filterPriority = $("filter-priority");
+const form = document.getElementById("new-issue-form");
+const searchInput = document.getElementById("search");
+const filterPriority = document.getElementById("filter-priority");
 let columns = {};
-const board = $("board");
-const modal = $("modal-new-issue"),
-  modalContent = $("modal-content"),
-  modalOverlay = $("modal-overlay");
+const board = document.getElementById("board");
+const modal = document.getElementById("modal-new-issue"),
+  modalContent = document.getElementById("modal-content"),
+  modalOverlay = document.getElementById("modal-overlay");
 
 // =========================
 // Helpers
@@ -330,7 +329,7 @@ function renderBoard() {
 function updateCounters() {
   LISTS.forEach((l) => {
     const c = todos.filter((i) => i.state === l.id).length;
-    const elc = $(`${l.id}-count`);
+  const elc = document.getElementById(`${l.id}-count`);
     if (elc) elc.textContent = c;
   });
 }
@@ -480,11 +479,11 @@ function closeModal() {
   }, 300);
 }
 
-$("toggle-new-issue").addEventListener("click", openModal);
-$("modal-close").addEventListener("click", closeModal);
-$("modal-cancel").addEventListener("click", closeModal);
+document.getElementById("toggle-new-issue").addEventListener("click", openModal);
+document.getElementById("modal-close").addEventListener("click", closeModal);
+document.getElementById("modal-cancel").addEventListener("click", closeModal);
 
-const createListBtn = $("create-list");
+const createListBtn = document.getElementById("create-list");
 if (createListBtn) createListBtn.addEventListener("click", createList);
 
 renderColumns();
