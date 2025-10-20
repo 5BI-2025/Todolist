@@ -1,7 +1,8 @@
 // =========================
 // Constants & State
 // =========================
-const STATES = ["backlog", "inprogress", "review", "done"];
+let LISTS = JSON.parse(localStorage.getItem("lists")) || [];
+let STATES = LISTS.map((l) => l.id);
 
 const PRIORITIES = {
   low: {
@@ -38,12 +39,7 @@ const PRIORITIES = {
   },
 };
 
-// try new key first, fall back to old key to preserve existing data
-let todos =
-  JSON.parse(
-    localStorage.getItem("todos-kanban") ||
-      localStorage.getItem("issues-kanban")
-  ) || [];
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
 // =========================
 // DOM refs
@@ -52,12 +48,8 @@ const $ = (id) => document.getElementById(id);
 const form = $("new-issue-form");
 const searchInput = $("search");
 const filterPriority = $("filter-priority");
-const columns = {
-  backlog: $("backlog"),
-  inprogress: $("inprogress"),
-  review: $("review"),
-  done: $("done"),
-};
+let columns = {};
+const board = $("board");
 const modal = $("modal-new-issue"),
   modalContent = $("modal-content"),
   modalOverlay = $("modal-overlay");
@@ -77,9 +69,144 @@ function el(tag, { cls, html, text, attrs = {}, ds = {}, children = [] } = {}) {
 }
 
 function saveTodos() {
-  localStorage.setItem("todos-kanban", JSON.stringify(todos));
+  localStorage.setItem("todos", JSON.stringify(todos));
 }
 const getP = (p) => PRIORITIES[p] || PRIORITIES.medium;
+
+function saveLists() {
+  localStorage.setItem("lists", JSON.stringify(LISTS));
+}
+
+function createList() {
+  const title = prompt("Nome nuova lista:", "Nuova Lista");
+  if (!title) return;
+  const id =
+    title
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-") +
+    "-" +
+    Date.now();
+  const list = { id, title: title.trim() };
+  LISTS.push(list);
+  saveLists();
+  renderColumns();
+  renderBoard();
+}
+
+function renderColumns() {
+  board.innerHTML = "";
+  columns = {};
+  LISTS.forEach((list, idx) => {
+    const colWrap = el("div", {
+      cls: "bg-white rounded-xl shadow-md p-5 flex flex-col min-w-[300px] board-column border-t-4 hover:shadow-lg transition-shadow duration-200",
+      attrs: {},
+      ds: { state: list.id },
+    });
+    colWrap.classList.add("border-gray-400");
+
+    const header = el("div", { cls: "flex justify-between items-center mb-5" });
+    const h3 = el("h3", {
+      cls: "font-bold text-lg text-gray-700 flex items-center",
+      html: `<i class=\"fas fa-list mr-2 text-gray-500\"></i> <span class=\"list-title\">${list.title}</span>`,
+    });
+    h3.querySelector(".list-title").addEventListener("click", () => {
+      const newTitle = prompt("Nuovo nome lista:", list.title);
+      if (newTitle && newTitle.trim()) {
+        list.title = newTitle.trim();
+        saveLists();
+        renderColumns();
+        renderBoard();
+      }
+    });
+
+    header.draggable = true;
+    header.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/list", list.id);
+      colWrap.classList.add("opacity-60", "scale-105");
+    });
+    header.addEventListener("dragend", () => {
+      colWrap.classList.remove("opacity-60", "scale-105");
+    });
+    header.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      header.classList.add("ring-2", "ring-indigo-200");
+    });
+    header.addEventListener("dragleave", () => {
+      header.classList.remove("ring-2", "ring-indigo-200");
+    });
+    header.addEventListener("drop", (e) => {
+      e.preventDefault();
+      header.classList.remove("ring-2", "ring-indigo-200");
+      const fromId = e.dataTransfer.getData("text/list");
+      if (!fromId || fromId === list.id) return;
+      reorderLists(fromId, list.id);
+    });
+
+    header.appendChild(h3);
+    header.appendChild(
+      el("span", {
+        cls: "bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold",
+        text: "0",
+        attrs: { id: `${list.id}-count` },
+      })
+    );
+
+    colWrap.appendChild(header);
+    const inner = el("div", {
+      cls: "flex-1 flex flex-col gap-4 overflow-y-auto min-h-[300px] max-h-[60vh]",
+      attrs: { id: list.id },
+    });
+    colWrap.appendChild(inner);
+    board.appendChild(colWrap);
+    columns[list.id] = inner;
+  });
+
+  document.querySelectorAll(".board-column").forEach((col) => {
+    col.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      col.classList.add(
+        "bg-blue-50",
+        "border-2",
+        "border-dashed",
+        "border-blue-300"
+      );
+    });
+    col.addEventListener("dragleave", () =>
+      col.classList.remove(
+        "bg-blue-50",
+        "border-2",
+        "border-dashed",
+        "border-blue-300"
+      )
+    );
+    col.addEventListener("drop", (e) => {
+      e.preventDefault();
+      col.classList.remove(
+        "bg-blue-50",
+        "border-2",
+        "border-dashed",
+        "border-blue-300"
+      );
+      const id =
+        e.dataTransfer.getData("text/todo") ||
+        e.dataTransfer.getData("text/plain");
+      const ns = col.dataset.state;
+      if (id && todos.find((t) => t.id === id)) moveTodo(id, ns);
+    });
+  });
+}
+
+function reorderLists(fromId, toId) {
+  const fromIdx = LISTS.findIndex((l) => l.id === fromId);
+  const toIdx = LISTS.findIndex((l) => l.id === toId);
+  if (fromIdx === -1 || toIdx === -1) return;
+  const [item] = LISTS.splice(fromIdx, 1);
+  LISTS.splice(toIdx, 0, item);
+  saveLists();
+  renderColumns();
+  renderBoard();
+}
 
 // =========================
 // UI builders
@@ -98,7 +225,7 @@ function makeMoveBtn(dir, newState, id) {
   });
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
-    moveIssue(id, newState);
+    moveTodo(id, newState);
   });
   return btn;
 }
@@ -149,22 +276,21 @@ function createTodoCard(todo) {
   if (idx < STATES.length - 1)
     btnGroup.appendChild(makeMoveBtn("right", STATES[idx + 1], todo.id));
 
-  const controls = el("div", {
-    cls: "flex justify-between items-center mt-3 pt-2 border-t border-gray-100",
-    children: [
-      btnGroup,
-      el("button", {
-        cls: "text-red-500 hover:bg-red-50 p-1.5 rounded hover:text-red-700 transition-colors",
-        html: '<i class="fas fa-trash"></i>',
-        attrs: { title: "Elimina todo" },
-      }),
-    ],
+  const deleteBtn = el("button", {
+    cls: "btn-delete text-red-500 hover:bg-red-50 p-1.5 rounded hover:text-red-700 transition-colors",
+    html: '<i class="fas fa-trash"></i>',
+    attrs: { title: "Elimina todo" },
   });
 
-  controls.querySelector("button:last-child").addEventListener("click", (e) => {
+  deleteBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     if (confirm("Sei sicuro di voler eliminare questo todo?"))
       deleteTodo(todo.id);
+  });
+
+  const controls = el("div", {
+    cls: "flex justify-between items-center mt-3 pt-2 border-t border-gray-100",
+    children: [btnGroup, deleteBtn],
   });
 
   card.appendChild(controls);
@@ -179,7 +305,10 @@ function createTodoCard(todo) {
 // Rendering & counters
 // =========================
 function renderBoard() {
-  STATES.forEach((s) => (columns[s].innerHTML = ""));
+  STATES = LISTS.map((l) => l.id);
+  STATES.forEach((s) => {
+    if (columns[s]) columns[s].innerHTML = "";
+  });
   const term = (searchInput.value || "").toLowerCase();
   const pref = filterPriority.value || "all";
 
@@ -191,15 +320,17 @@ function renderBoard() {
       const matchP = pref === "all" || i.priority === pref;
       return matchText && matchP;
     })
-    .forEach((i) => columns[i.state].appendChild(createTodoCard(i)));
+    .forEach((i) => {
+      if (columns[i.state]) columns[i.state].appendChild(createTodoCard(i));
+    });
 
   updateCounters();
 }
 
 function updateCounters() {
-  STATES.forEach((s) => {
-    const c = todos.filter((i) => i.state === s).length;
-    const elc = $(`${s}-count`);
+  LISTS.forEach((l) => {
+    const c = todos.filter((i) => i.state === l.id).length;
+    const elc = $(`${l.id}-count`);
     if (elc) elc.textContent = c;
   });
 }
@@ -235,7 +366,11 @@ function handleDragStart(e) {
     "z-10"
   );
   e.dataTransfer.effectAllowed = "move";
-  e.dataTransfer.setData("text/plain", this.dataset.id);
+  try {
+    e.dataTransfer.setData("text/todo", this.dataset.id);
+  } catch (err) {
+    e.dataTransfer.setData("text/plain", this.dataset.id);
+  }
 }
 
 function handleDragEnd() {
@@ -247,7 +382,7 @@ function handleDragEnd() {
     "z-10"
   );
   document
-    .querySelectorAll(".kanban-column")
+    .querySelectorAll(".board-column")
     .forEach((c) =>
       c.classList.remove(
         "bg-blue-50",
@@ -261,7 +396,7 @@ function handleDragEnd() {
 // =========================
 // Column events
 // =========================
-document.querySelectorAll(".kanban-column").forEach((col) => {
+document.querySelectorAll(".board-column").forEach((col) => {
   col.addEventListener("dragover", (e) => {
     e.preventDefault();
     col.classList.add(
@@ -287,7 +422,9 @@ document.querySelectorAll(".kanban-column").forEach((col) => {
       "border-dashed",
       "border-blue-300"
     );
-    const id = e.dataTransfer.getData("text/plain");
+    const id =
+      e.dataTransfer.getData("text/todo") ||
+      e.dataTransfer.getData("text/plain");
     const ns = col.dataset.state;
     moveTodo(id, ns);
   });
@@ -298,6 +435,8 @@ document.querySelectorAll(".kanban-column").forEach((col) => {
 // =========================
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  if (!LISTS.length)
+    return alert("Crea prima almeno una lista per aggiungere todo.");
   const title = form.title.value.trim();
   if (!title) return alert("Il titolo è obbligatorio!");
   const newTodo = {
@@ -305,7 +444,7 @@ form.addEventListener("submit", (e) => {
     title,
     description: form.description.value.trim(),
     priority: form.priority.value || "medium",
-    state: "backlog",
+    state: LISTS[0].id,
   };
   todos.push(newTodo);
   saveTodos();
@@ -344,6 +483,12 @@ function closeModal() {
 $("toggle-new-issue").addEventListener("click", openModal);
 $("modal-close").addEventListener("click", closeModal);
 $("modal-cancel").addEventListener("click", closeModal);
+
+const createListBtn = $("create-list");
+if (createListBtn) createListBtn.addEventListener("click", createList);
+
+renderColumns();
+renderBoard();
 modalOverlay.addEventListener("click", closeModal);
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !modal.classList.contains("pointer-events-none"))

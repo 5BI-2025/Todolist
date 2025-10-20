@@ -41,7 +41,7 @@
         <h1
           class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-500"
         >
-          Kanban Board - Todo List
+          Task Board - Todo List
         </h1>
       </div>
       <button
@@ -49,6 +49,13 @@
         class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 hover:shadow-lg transition-all duration-200 flex items-center gap-2"
       >
         <i class="fas fa-plus"></i> Nuovo Todo
+      </button>
+      <button
+        id="create-list"
+        class="ml-3 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-lg hover:shadow transition-all duration-200 flex items-center gap-2"
+        title="Crea una nuova lista"
+      >
+        <i class="fas fa-layer-group"></i> Crea Lista
       </button>
     </div>
 
@@ -196,92 +203,11 @@
       </div>
     </div>
 
-    <!-- Kanban Board - Versione Compatta -->
+    <!-- Task Board - rendered dynamically -->
     <div
-      id="kanban"
+      id="board"
       class="flex flex-col md:flex-row gap-5 w-full max-w-7xl overflow-x-auto pb-4"
-    >
-      <!-- Colonne -->
-      <div
-        class="bg-white rounded-xl shadow-md p-5 flex flex-col min-w-[300px] kanban-column border-t-4 border-gray-400 hover:shadow-lg transition-shadow duration-200"
-        data-state="backlog"
-      >
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="font-bold text-lg text-gray-700 flex items-center">
-            <i class="fas fa-list mr-2 text-gray-500"></i> Backlog
-          </h3>
-          <span
-            id="backlog-count"
-            class="bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold"
-            >0</span
-          >
-        </div>
-        <div
-          id="backlog"
-          class="flex-1 flex flex-col gap-4 overflow-y-auto min-h-[300px] max-h-[60vh]"
-        ></div>
-      </div>
-
-      <div
-        class="bg-white rounded-xl shadow-md p-5 flex flex-col min-w-[300px] kanban-column border-t-4 border-blue-400 hover:shadow-lg transition-shadow duration-200"
-        data-state="inprogress"
-      >
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="font-bold text-lg text-gray-700 flex items-center">
-            <i class="fas fa-tasks mr-2 text-blue-500"></i> In Progress
-          </h3>
-          <span
-            id="inprogress-count"
-            class="bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-xs font-semibold"
-            >0</span
-          >
-        </div>
-        <div
-          id="inprogress"
-          class="flex-1 flex flex-col gap-4 overflow-y-auto min-h-[300px] max-h-[60vh]"
-        ></div>
-      </div>
-
-      <div
-        class="bg-white rounded-xl shadow-md p-5 flex flex-col min-w-[300px] kanban-column border-t-4 border-yellow-400 hover:shadow-lg transition-shadow duration-200"
-        data-state="review"
-      >
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="font-bold text-lg text-gray-700 flex items-center">
-            <i class="fas fa-search mr-2 text-yellow-500"></i> Review
-          </h3>
-          <span
-            id="review-count"
-            class="bg-yellow-100 text-yellow-700 rounded-full px-3 py-1 text-xs font-semibold"
-            >0</span
-          >
-        </div>
-        <div
-          id="review"
-          class="flex-1 flex flex-col gap-4 overflow-y-auto min-h-[300px] max-h-[60vh]"
-        ></div>
-      </div>
-
-      <div
-        class="bg-white rounded-xl shadow-md p-5 flex flex-col min-w-[300px] kanban-column border-t-4 border-green-400 hover:shadow-lg transition-shadow duration-200"
-        data-state="done"
-      >
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="font-bold text-lg text-gray-700 flex items-center">
-            <i class="fas fa-check-circle mr-2 text-green-500"></i> Done
-          </h3>
-          <span
-            id="done-count"
-            class="bg-green-100 text-green-700 rounded-full px-3 py-1 text-xs font-semibold"
-            >0</span
-          >
-        </div>
-        <div
-          id="done"
-          class="flex-1 flex flex-col gap-4 overflow-y-auto min-h-[300px] max-h-[60vh]"
-        ></div>
-      </div>
-    </div>
+    ></div>
 
     <script src="src/js/app.js"></script>
   </body>
