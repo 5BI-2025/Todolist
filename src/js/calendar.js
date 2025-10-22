@@ -54,20 +54,36 @@ function initCalendar(todos, getP, updateViews, switchView) {
     // Filter todos for current view
     const term = (searchInput.value || "").toLowerCase();
     const pref = filterPriority.value || "all";
+    // Normalize date strings to local YYYY-MM-DD for comparison
+    function normalizeDate(dateStr) {
+      if (!dateStr) return null;
+      // Already in YYYY-MM-DD format
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+      const d = new Date(dateStr);
+      if (isNaN(d)) return null;
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${dd}`;
+    }
     const filteredTodos = todos.filter((i) => {
       const matchText =
         i.title.toLowerCase().includes(term) ||
         (i.description && i.description.toLowerCase().includes(term));
       const matchP = pref === "all" || i.priority === pref;
       return matchText && matchP;
-    });
+    }).map(t => ({ ...t, _normDue: normalizeDate(t.dueDate) }));
 
     // Create days with todos
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      const dateStr = date.toISOString().split("T")[0]; // YYYY-MM-DD format
+      // Build a local YYYY-MM-DD string to match the format produced by <input type="date">
+      const yr = date.getFullYear();
+      const mo = String(date.getMonth() + 1).padStart(2, "0");
+      const da = String(date.getDate()).padStart(2, "0");
+      const dateStr = `${yr}-${mo}-${da}`;
 
-      const todosForDay = filteredTodos.filter((t) => t.dueDate === dateStr);
+      const todosForDay = filteredTodos.filter((t) => t._normDue === dateStr);
 
       // Check if this date is in the past
       const today = new Date();
@@ -106,7 +122,7 @@ function initCalendar(todos, getP, updateViews, switchView) {
         date.getFullYear() === new Date().getFullYear()
       ) {
         dayHeader.classList.add(
-          "text-white",
+          "text-black",
           "bg-indigo-600",
           "rounded-full",
           "w-6",
@@ -122,8 +138,10 @@ function initCalendar(todos, getP, updateViews, switchView) {
       if (todosForDay.length) {
         todosForDay.forEach((todo) => {
           const p = getP(todo.priority);
+          // Use a left border with priority color (e.g. 'border-l-4 border-l-green-500')
+          const borderClass = `border-l-4 ${p.border}`.trim();
           const todoItem = el("div", {
-            cls: `text-xs p-1 mb-1 rounded ${p.bg} ${p.border} truncate cursor-pointer`,
+            cls: `text-xs p-1 mb-1 rounded ${p.bg} ${borderClass} truncate cursor-pointer`,
             text: todo.title,
             ds: { id: todo.id },
           });
