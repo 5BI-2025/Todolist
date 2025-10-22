@@ -85,13 +85,7 @@ function saveLists() {
 function createList() {
   const title = prompt("Nome nuova lista:", "Nuova Lista");
   if (!title) return;
-  const id =
-    title
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-") +
-    "-" +
-    Date.now();
+  const id = `list-${Date.now()}`;
   const list = { id, title: title.trim() };
   LISTS.push(list);
   saveLists();
