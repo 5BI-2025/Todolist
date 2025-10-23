@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="src/css/style.css" />
   </head>
   <body
-    class="bg-linear-to-br from-[#f3fbf7] via-[#eef8ff] to-[#f7fbf9] min-h-screen flex flex-col items-center p-4"
+    class="bg-gradient-to-br from-slate-100 via-gray-50 to-slate-200 min-h-screen flex flex-col items-center p-4"
   >
     <div
-      class="w-full max-w-7xl flex flex-col sm:flex-row items-center justify-between mb-6 px-2"
+      class="w-full max-w-[85vw] flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-white/40 backdrop-blur-sm p-5 rounded-xl shadow-lg border border-slate-200"
     >
       <div class="flex items-center mb-4 sm:mb-0">
         <span class="text-indigo-600 text-4xl mr-3"
@@ -27,24 +27,26 @@
           Task Board - Todo List
         </h1>
       </div>
-      <button
-        id="toggle-new-issue"
-        class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 hover:shadow-lg transition-all duration-200 flex items-center gap-2"
-      >
-        <i class="fas fa-plus"></i> Nuovo Todo
-      </button>
-      <button
-        id="create-list"
-        class="ml-3 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-lg hover:shadow transition-all duration-200 flex items-center gap-2"
-        title="Crea una nuova lista"
-      >
-        <i class="fas fa-layer-group"></i> Crea Lista
-      </button>
+      <div class="flex items-center gap-3">
+        <button
+          id="create-list"
+          class="bg-white/50 backdrop-blur-sm border border-slate-200 text-slate-600 px-4 py-2.5 rounded-lg hover:shadow-md hover:bg-white/70 transition-all duration-200 flex items-center gap-2"
+          title="Crea una nuova lista"
+        >
+          <i class="fas fa-layer-group"></i> Crea Lista
+        </button>
+        <button
+          id="toggle-new-issue"
+          class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 flex items-center gap-2"
+        >
+          <i class="fas fa-plus"></i> Nuovo Todo
+        </button>
+      </div>
     </div>
 
     <!-- Filtri e Ricerca (ora sopra il form) -->
     <div
-      class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 w-full max-w-7xl mb-6 transition-all hover:shadow-xl duration-300"
+      class="bg-white/60 backdrop-blur-sm p-5 rounded-xl shadow-lg border border-slate-200 w-full max-w-[85vw] mb-6 transition-all hover:shadow-xl duration-300"
     >
       <div class="flex flex-col gap-5">
         <!-- View Toggle -->
@@ -61,7 +63,7 @@
             <button
               id="view-calendar"
               type="button"
-              class="view-btn px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-indigo-700 focus:z-10 focus:ring-2 focus:ring-indigo-500"
+              class="view-btn px-4 py-2 text-sm font-medium text-zinc-700 bg-white/10 backdrop-blur-sm border border-zinc-200/50 rounded-r-lg hover:bg-white/20 hover:text-indigo-700 focus:z-10 focus:ring-2 focus:ring-indigo-500"
             >
               <i class="fas fa-calendar-alt mr-2"></i>
               Calendario
@@ -79,7 +81,7 @@
                 type="text"
                 id="search"
                 placeholder="Cerca per titolo o descrizione..."
-                class="w-full border border-gray-200 rounded-lg px-4 py-2.5 pl-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                class="w-full border border-zinc-200/50 rounded-lg px-4 py-2.5 pl-10 bg-white/10 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-zinc-700 placeholder-zinc-400"
               />
               <i
                 class="fas fa-search absolute left-3.5 top-3.5 text-gray-400"
@@ -95,7 +97,7 @@
             <div class="relative">
               <select
                 id="filter-priority"
-                class="w-full appearance-none border border-gray-200 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white transition-all"
+                class="w-full appearance-none border border-zinc-200/50 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white/10 backdrop-blur-sm transition-all text-zinc-700"
               >
                 <option value="all">Tutte</option>
                 <option value="low">Bassa</option>
@@ -127,7 +129,7 @@
 
       <div
         id="modal-content"
-        class="relative bg-white rounded-xl shadow-2xl w-full max-w-xl p-7 transform transition-all duration-300 scale-95 opacity-0"
+        class="relative bg-white/20 backdrop-blur-md rounded-xl shadow-2xl w-full max-w-xl p-7 transform transition-all duration-300 scale-95 opacity-0 border border-zinc-200/50"
         style="z-index: 60"
       >
         <button
@@ -152,7 +154,7 @@
               id="title"
               name="title"
               required
-              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+              class="w-full border border-zinc-200/50 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/10 backdrop-blur-sm text-zinc-700"
             />
           </div>
           <div class="mb-5">
@@ -165,7 +167,7 @@
               id="description"
               name="description"
               rows="3"
-              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+              class="w-full border border-zinc-200/50 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/10 backdrop-blur-sm text-zinc-700"
             ></textarea>
           </div>
           <div class="mb-5">
@@ -176,7 +178,7 @@
               <select
                 id="priority"
                 name="priority"
-                class="w-full appearance-none border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                class="w-full appearance-none border border-zinc-200/50 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/10 backdrop-blur-sm text-zinc-700"
               >
                 <option value="low">Bassa</option>
                 <option value="medium" selected>Media</option>
@@ -199,7 +201,7 @@
                 type="date"
                 id="dueDate"
                 name="dueDate"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
+                class="w-full border border-zinc-200/50 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm bg-white/10 backdrop-blur-sm text-zinc-700"
               />
               <div
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
@@ -212,7 +214,7 @@
             <button
               type="button"
               id="modal-cancel"
-              class="px-5 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-100 font-medium transition-colors"
+              class="px-5 py-2.5 rounded-lg border border-zinc-200/50 bg-white/10 hover:bg-white/20 font-medium transition-colors text-zinc-700 backdrop-blur-sm"
             >
               Annulla
             </button>
@@ -231,12 +233,12 @@
     <!-- Task Board - rendered dynamically -->
     <div
       id="board"
-      class="flex flex-col md:flex-row gap-5 w-full max-w-7xl overflow-x-auto pb-4"
+      class="flex flex-row gap-5 w-full max-w-[85vw] overflow-x-auto pb-4 px-2"
     ></div>
 
     <!-- Calendar View - hidden by default -->
     <div id="calendar-view" class="w-full max-w-7xl hidden">
-      <div class="bg-white rounded-xl shadow-md p-5">
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-5 border border-zinc-200/50">
         <div
           id="calendar-header"
           class="flex justify-between items-center mb-4"

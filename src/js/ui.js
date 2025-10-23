@@ -5,6 +5,7 @@ import {
   getP,
   saveLists,
   createList,
+  deleteList,
   reorderLists,
   addTodo,
   moveTodo as stateMoveTodo,
@@ -32,15 +33,22 @@ function renderColumns() {
   columns = {};
   LISTS.forEach((list) => {
     const colWrap = el("div", {
-      cls: "bg-white rounded-xl shadow-md p-5 flex flex-col min-w-[300px] board-column border-t-4 hover:shadow-lg transition-shadow duration-200",
+      cls: "bg-white/60 backdrop-blur-sm rounded-xl shadow-md p-5 flex flex-col min-w-[100px] flex-1 board-column border border-slate-200 hover:shadow-lg transition-all duration-200",
       ds: { state: list.id },
     });
-    colWrap.classList.add("border-gray-400");
+    colWrap.classList.add("hover:border-zinc-300");
 
     const header = el("div", { cls: "flex justify-between items-center mb-5" });
+    const titleWrapper = el("div", { cls: "flex items-center gap-3" });
     const h3 = el("h3", {
-      cls: "font-bold text-lg text-gray-700 flex items-center",
-      html: `<i class=\"fas fa-list mr-2 text-gray-500\"></i> <span class=\"list-title\">${list.title}</span>`,
+      cls: "font-bold text-lg text-slate-700 flex items-center",
+      html: `<i class=\"fas fa-list mr-2 text-slate-500\"></i> <span class=\"list-title\">${list.title}</span>`,
+    });
+
+    const deleteBtn = el("button", {
+      cls: "text-gray-400 hover:text-red-500 transition-colors",
+      html: '<i class="fas fa-trash"></i>',
+      attrs: { title: "Elimina lista" },
     });
 
     h3.querySelector(".list-title").addEventListener("click", () => {
@@ -78,10 +86,28 @@ function renderColumns() {
       renderBoard();
     });
 
-    header.appendChild(h3);
+    deleteBtn.addEventListener("click", () => {
+      if (
+        confirm(
+          `Sei sicuro di voler eliminare la lista "${list.title}"?${
+            LISTS.length === 1
+              ? "\nAttenzione: questa è l'ultima lista, eliminandola verranno rimossi tutti i todo!"
+              : ""
+          }`
+        )
+      ) {
+        deleteList(list.id);
+        renderColumns();
+        renderBoard();
+      }
+    });
+
+    titleWrapper.appendChild(h3);
+    titleWrapper.appendChild(deleteBtn);
+    header.appendChild(titleWrapper);
     header.appendChild(
       el("span", {
-        cls: "bg-gray-200 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold",
+        cls: "bg-slate-200/70 text-slate-600 rounded-full px-3 py-1 text-xs font-semibold",
         text: "0",
         attrs: { id: `${list.id}-count` },
       })
@@ -101,10 +127,10 @@ function renderColumns() {
     col.addEventListener("dragover", (e) => {
       e.preventDefault();
       col.classList.add(
-        "bg-blue-50",
+        "bg-sky-50/50",
         "border-2",
         "border-dashed",
-        "border-blue-300"
+        "border-sky-300"
       );
     });
     col.addEventListener("dragleave", () =>

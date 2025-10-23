@@ -69,6 +69,33 @@ export function reorderLists(fromId, toId) {
   saveLists();
 }
 
+export function deleteList(listId) {
+  const idx = LISTS.findIndex((l) => l.id === listId);
+  if (idx === -1) return;
+
+  // Move todos from this list to the first available list or delete them if no list remains
+  const todosInList = todos.filter((t) => t.state === listId);
+  const availableLists = LISTS.filter((l) => l.id !== listId);
+
+  if (availableLists.length > 0) {
+    const nextList = availableLists[0].id;
+    todosInList.forEach((todo) => {
+      todo.state = nextList;
+    });
+  } else {
+    // Remove todos if this was the last list
+    todos = todos.filter((t) => t.state !== listId);
+  }
+
+  // Remove the list
+  LISTS.splice(idx, 1);
+  STATES = LISTS.map((l) => l.id);
+
+  // Save changes
+  saveTodos();
+  saveLists();
+}
+
 export function addTodo(newTodo) {
   todos.push(newTodo);
   saveTodos();

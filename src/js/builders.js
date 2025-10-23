@@ -28,18 +28,6 @@ export function createTodoCard(todo, moveTodo, deleteTodo) {
     ds: { id: todo.id },
   });
 
-  if (todo.dueDate) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const dueDate = new Date(todo.dueDate);
-    dueDate.setHours(0, 0, 0, 0);
-
-    if (dueDate < today) {
-      card.classList.add("border-t-red-500");
-    } else if (dueDate.getTime() === today.getTime()) {
-      card.classList.add("border-t-orange-400");
-    }
-  }
   card.draggable = true;
 
   card.appendChild(
@@ -72,18 +60,6 @@ export function createTodoCard(todo, moveTodo, deleteTodo) {
       )}`,
     })
   );
-
-  if (todo.dueDate) {
-    const dueDate = new Date(todo.dueDate);
-    card.appendChild(
-      el("div", {
-        cls: "text-xs text-blue-600 mb-3 flex items-center",
-        html: `<i class="fas fa-hourglass-half mr-1"></i> Scadenza: ${dueDate.toLocaleDateString(
-          "it-IT"
-        )}`,
-      })
-    );
-  }
 
   const btnGroup = el("div", { cls: "flex gap-1" });
   const idx = STATES.indexOf(todo.state);
