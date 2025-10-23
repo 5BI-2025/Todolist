@@ -74,15 +74,16 @@ function initCalendar(todos, getP, updateViews, switchView) {
       const todosForDay = filteredTodos.filter((t) => t._normDue === dateStr);
 
       date.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const isPast = date < today;
 
       let cellClass =
         "day-cell h-28 p-1 border border-gray-100 bg-white hover:bg-gray-50 transition-colors overflow-auto";
 
       if (todosForDay.length > 0) {
-        // Has todos - add a subtle background
         cellClass += " bg-indigo-50";
 
-        // If past due and has todos, make it more obvious
         if (isPast) {
           cellClass += " bg-red-50";
         }
