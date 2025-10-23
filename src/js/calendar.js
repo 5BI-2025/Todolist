@@ -1,8 +1,3 @@
-// =========================
-// Calendar view
-// =========================
-
-// Current calendar view date
 let currentDate = new Date();
 
 function initCalendar(todos, getP, updateViews, switchView) {
@@ -25,16 +20,13 @@ function initCalendar(todos, getP, updateViews, switchView) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
-    // Set the header
     currentMonthEl.textContent = `${
       getMonthName(currentDate).charAt(0).toUpperCase() +
       getMonthName(currentDate).slice(1)
     } ${year}`;
 
-    // Clear the days container
     calendarDaysEl.innerHTML = "";
 
-    // Create the days grid
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
@@ -66,13 +58,15 @@ function initCalendar(todos, getP, updateViews, switchView) {
       const dd = String(d.getDate()).padStart(2, "0");
       return `${y}-${m}-${dd}`;
     }
-    const filteredTodos = todos.filter((i) => {
-      const matchText =
-        i.title.toLowerCase().includes(term) ||
-        (i.description && i.description.toLowerCase().includes(term));
-      const matchP = pref === "all" || i.priority === pref;
-      return matchText && matchP;
-    }).map(t => ({ ...t, _normDue: normalizeDate(t.dueDate) }));
+    const filteredTodos = todos
+      .filter((i) => {
+        const matchText =
+          i.title.toLowerCase().includes(term) ||
+          (i.description && i.description.toLowerCase().includes(term));
+        const matchP = pref === "all" || i.priority === pref;
+        return matchText && matchP;
+      })
+      .map((t) => ({ ...t, _normDue: normalizeDate(t.dueDate) }));
 
     // Create days with todos
     for (let day = 1; day <= daysInMonth; day++) {
@@ -232,7 +226,6 @@ function initCalendar(todos, getP, updateViews, switchView) {
   viewBoardBtn.addEventListener("click", () => handleSwitchView("board"));
   viewCalendarBtn.addEventListener("click", () => handleSwitchView("calendar"));
 
-  // Set up CSS for highlighted todos
   const style = document.createElement("style");
   style.textContent = `
     .view-btn.active {
@@ -273,11 +266,9 @@ function initCalendar(todos, getP, updateViews, switchView) {
   `;
   document.head.appendChild(style);
 
-  // Initialize calendar
   renderCalendar();
-  handleSwitchView("board"); // Ensure we start with the board view
+  handleSwitchView("board");
 
-  // Return functions to be used by app.js
   return {
     renderCalendar,
     switchView: handleSwitchView,
