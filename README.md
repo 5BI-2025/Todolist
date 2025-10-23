@@ -15,7 +15,6 @@ Un'applicazione web moderna per la gestione delle attività, realizzata con Java
 
 ### Requisiti Non Funzionali
 
-
 - Persistenza
 
 - Semplicità
