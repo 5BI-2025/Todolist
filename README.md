@@ -2,6 +2,29 @@
 
 Un'applicazione web moderna per la gestione delle attività, realizzata con JavaScript vanilla e stile Tailwind CSS.
 
+## Requisiti
+
+### Requisiti Funzionali
+- Creare una nuova lista (colonna)
+- Aggiungere un nuovo Todo (issue/problema)
+- Eliminare un Todo
+- Spostare Todo tra liste
+- Riordinare colonne
+- Ricerca e filtro
+- Vista calendario
+
+### Requisiti Non Funzionali
+
+
+- Persistenza
+
+- Semplicità
+
+- Usabilità
+
+- Funzionamento su qualsiasi browser moderno
+
+
 ## Caratteristiche
 
 - Interfaccia drag-and-drop intuitiva

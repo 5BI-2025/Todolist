@@ -31,10 +31,8 @@ function initCalendar(todos, getP, updateViews, switchView) {
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
 
-    // Calculate how many empty cells before first day of month
-    let firstDayIndex = firstDay.getDay(); // 0 = Sunday
+    let firstDayIndex = firstDay.getDay();
 
-    // Create empty cells for days before the first day of the month
     for (let i = 0; i < firstDayIndex; i++) {
       calendarDaysEl.appendChild(
         el("div", {
@@ -43,13 +41,11 @@ function initCalendar(todos, getP, updateViews, switchView) {
       );
     }
 
-    // Filter todos for current view
     const term = (searchInput.value || "").toLowerCase();
     const pref = filterPriority.value || "all";
-    // Normalize date strings to local YYYY-MM-DD for comparison
+    
     function normalizeDate(dateStr) {
       if (!dateStr) return null;
-      // Already in YYYY-MM-DD format
       if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
       const d = new Date(dateStr);
       if (isNaN(d)) return null;
@@ -68,10 +64,8 @@ function initCalendar(todos, getP, updateViews, switchView) {
       })
       .map((t) => ({ ...t, _normDue: normalizeDate(t.dueDate) }));
 
-    // Create days with todos
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      // Build a local YYYY-MM-DD string to match the format produced by <input type="date">
       const yr = date.getFullYear();
       const mo = String(date.getMonth() + 1).padStart(2, "0");
       const da = String(date.getDate()).padStart(2, "0");
@@ -98,14 +92,12 @@ function initCalendar(todos, getP, updateViews, switchView) {
         cls: cellClass,
       });
 
-      // Add date number
       const dayHeader = el("div", {
         cls: "text-right font-medium text-gray-700 mb-1 sticky top-0 bg-white z-10 p-1",
         text: day.toString(),
       });
       dayCell.appendChild(dayHeader);
 
-      // Mark today
       if (
         date.getDate() === new Date().getDate() &&
         date.getMonth() === new Date().getMonth() &&
@@ -124,11 +116,9 @@ function initCalendar(todos, getP, updateViews, switchView) {
         );
       }
 
-      // Add todos for this day
       if (todosForDay.length) {
         todosForDay.forEach((todo) => {
           const p = getP(todo.priority);
-          // Use a left border with priority color (e.g. 'border-l-4 border-l-green-500')
           const borderClass = `border-l-4 ${p.border}`.trim();
           const todoItem = el("div", {
             cls: `text-xs p-1 mb-1 rounded ${p.bg} ${borderClass} truncate cursor-pointer`,
@@ -137,7 +127,6 @@ function initCalendar(todos, getP, updateViews, switchView) {
           });
 
           todoItem.addEventListener("click", () => {
-            // Find the appropriate column for this todo and scroll to it
             switchView("board");
             setTimeout(() => {
               const todoEl = document.querySelector(
@@ -192,7 +181,6 @@ function initCalendar(todos, getP, updateViews, switchView) {
     }
   }
 
-  // Helper function for creating elements
   function el(
     tag,
     { cls, html, text, attrs = {}, ds = {}, children = [] } = {}
@@ -207,7 +195,6 @@ function initCalendar(todos, getP, updateViews, switchView) {
     return n;
   }
 
-  // Calendar navigation
   prevMonthBtn.addEventListener("click", () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar();
@@ -218,7 +205,6 @@ function initCalendar(todos, getP, updateViews, switchView) {
     renderCalendar();
   });
 
-  // View toggle events
   viewBoardBtn.addEventListener("click", () => handleSwitchView("board"));
   viewCalendarBtn.addEventListener("click", () => handleSwitchView("calendar"));
 
@@ -241,7 +227,6 @@ function initCalendar(todos, getP, updateViews, switchView) {
       100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
     }
     
-    /* Scrollbar styling for calendar day cells */
     .day-cell {
       scrollbar-width: thin;
       scrollbar-color: rgba(156, 163, 175, 0.5) transparent;

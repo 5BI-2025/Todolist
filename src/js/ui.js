@@ -193,8 +193,6 @@ function updateCounters() {
   });
 }
 
-// Drag handlers moved to ./drag.js
-
 function moveTodo(id, state) {
   stateMoveTodo(id, state);
   updateViews();
@@ -211,7 +209,6 @@ function updateViews() {
   }
 }
 
-// Form & modal
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (!LISTS.length)
@@ -278,17 +275,13 @@ document.addEventListener("keydown", (e) => {
     closeModal();
 });
 
-// Expose an init function
 export function initUI() {
   renderColumns();
   renderBoard();
 
-  const calendar = initCalendar(todos, getP, updateViews, (view) => {
-    // noop - calendar module exposes methods to switch view
-  });
+  const calendar = initCalendar(todos, getP, updateViews);
 
   renderCalendarFn = calendar.renderCalendar;
-  // Return helper if caller wants to switch view
   return {
     renderCalendar: renderCalendarFn,
     switchView: calendar.switchView,
