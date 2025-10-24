@@ -64,14 +64,26 @@ export function createTodoCard(todo, moveTodo, deleteTodo) {
   if (todo.dueDate) {
     const dueDateObj = new Date(todo.dueDate);
     const today = new Date();
-    const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const dueOnly = new Date(dueDateObj.getFullYear(), dueDateObj.getMonth(), dueDateObj.getDate());
+    const todayOnly = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    const dueOnly = new Date(
+      dueDateObj.getFullYear(),
+      dueDateObj.getMonth(),
+      dueDateObj.getDate()
+    );
     const overdue = dueOnly < todayOnly;
-    const dueClass = overdue ? "text-sm text-red-500 font-semibold mb-3 flex items-center" : "text-sm text-gray-500 mb-3 flex items-center";
+    const dueClass = overdue
+      ? "text-sm text-red-500 font-semibold mb-3 flex items-center"
+      : "text-sm text-gray-500 mb-3 flex items-center";
     card.appendChild(
       el("div", {
         cls: dueClass,
-        html: `<i class="fas fa-hourglass-end mr-1"></i> Scadenza: ${dueDateObj.toLocaleDateString("it-IT")}`,
+        html: `<i class="fas fa-hourglass-end mr-1"></i> Scadenza: ${dueDateObj.toLocaleDateString(
+          "it-IT"
+        )}`,
       })
     );
   }

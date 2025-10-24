@@ -43,7 +43,7 @@ function initCalendar(todos, getP, updateViews, switchView) {
 
     const term = (searchInput.value || "").toLowerCase();
     const pref = filterPriority.value || "all";
-    
+
     function normalizeDate(dateStr) {
       if (!dateStr) return null;
       if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;

@@ -13,9 +13,16 @@
   </head>
   <body
     class="bg-gradient-to-br from-slate-100 via-gray-50 to-slate-200 min-h-screen flex flex-col items-center p-4"
+    style="
+      background-image: url('./public/f81a3ecbc9663a4c0556d0ceb7780c77.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    "
   >
     <div
-      class="w-full max-w-[85vw] flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-white/40 backdrop-blur-sm p-5 rounded-xl shadow-lg border border-slate-200"
+      class="w-full max-w-[85vw] flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-white/60 backdrop-blur-sm p-5 rounded-xl shadow-lg border border-slate-200"
     >
       <div class="flex items-center mb-4 sm:mb-0">
         <span class="text-violet-500 text-4xl mr-3"
@@ -71,9 +78,6 @@
 
         <div class="flex flex-col md:flex-row gap-5 justify-between">
           <div class="flex-1">
-            <label for="search" class="block font-medium mb-2 text-gray-700"
-              >Cerca Todo</label
-            >
             <div class="relative">
               <input
                 type="text"
@@ -87,11 +91,6 @@
             </div>
           </div>
           <div class="md:w-64">
-            <label
-              for="filter-priority"
-              class="block font-medium mb-2 text-gray-700"
-              >Filtra per Priorità</label
-            >
             <div class="relative">
               <select
                 id="filter-priority"
