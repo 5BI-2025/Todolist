@@ -8,7 +8,6 @@
   </head>
 
   <body class="bg-gray-100 min-h-screen">
-    <!-- Header Bar -->
     <header class="bg-white border-b border-gray-200 px-6 py-4 mb-6">
       <div class="flex items-center justify-between max-w-full">
         <h1 class="text-2xl font-semibold text-gray-800">Todo Board</h1>
@@ -23,16 +22,13 @@
       </div>
     </header>
 
-    <!-- Board Container -->
     <div class="px-6 pb-6">
-      <div id="board-container" class="flex gap-4 overflow-x-auto pb-4">
-        <!-- Lists will be rendered here by JavaScript -->
+      <div id="board-container" class="flex gap-4 overflow-x-auto pb-64">
+        <!-- Liste dinamiche qui -->
       </div>
     </div>
 
-    <!-- Modals -->
-
-    <!-- New List Modal -->
+    <!-- Modal Nuova Lista -->
     <dialog id="new-list-modal" class="modal">
       <div class="modal-box bg-white">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">
@@ -75,7 +71,7 @@
       </form>
     </dialog>
 
-    <!-- New Todo Modal -->
+    <!-- Modal Nuova Card -->
     <dialog id="new-todo-modal" class="modal">
       <div class="modal-box bg-white">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">
@@ -130,7 +126,7 @@
               id="todo-list-select"
               class="select select-bordered w-full bg-white border-gray-300"
             >
-              <!-- Options will be populated by JS -->
+              <!-- Opzioni popolate da JS -->
             </select>
           </div>
 

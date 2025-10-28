@@ -7,8 +7,23 @@ const priorityStyles = {
   urgent: "bg-red-100 text-red-700",
 };
 
-function createCardHTML(card) {
+function createCardHTML(card, currentListId) {
   const priorityClass = priorityStyles[card.priority] || priorityStyles.medium;
+  const lists = getLists();
+
+  // crea le opzioni per spostare la card in altre liste, escludendo la lista corrente
+  const listOptions = lists
+    .filter((list) => list.id !== currentListId)
+    .map(
+      (list) => `
+      <li>
+        <button class="text-sm hover:bg-gray-100 active:bg-gray-200" data-action="move-to-list" data-target-list="${list.id}">
+          ${list.name}
+        </button>
+      </li>
+    `
+    )
+    .join("");
 
   return `
     <div class="bg-white rounded-md shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer" data-card-id="${
@@ -22,9 +37,17 @@ function createCardHTML(card) {
       </div>
       <p class="text-xs text-gray-500 mb-3">${card.description || ""}</p>
       <div class="flex justify-end gap-1">
-        <button class="btn btn-xs bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100" data-action="move">
-          Move
-        </button>
+        <div class="dropdown dropdown-end">
+          <button class="btn btn-xs bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100" data-action="move">
+            Move ▾
+          </button>
+          <ul tabindex="0" class="dropdown-content menu bg-white rounded-md z-50 w-48 p-2 shadow-lg border border-gray-200 max-h-64 overflow-y-auto flex-col flex-nowrap">
+            ${
+              listOptions ||
+              '<li class="text-xs text-gray-400 px-3 py-2">No other lists available</li>'
+            }
+          </ul>
+        </div>
         <button class="btn btn-xs bg-red-50 text-red-600 border border-red-200 hover:bg-red-100" data-action="delete">
           Delete
         </button>
@@ -34,7 +57,9 @@ function createCardHTML(card) {
 }
 
 function createListHTML(list) {
-  const cardsHTML = list.cards.map((card) => createCardHTML(card)).join(""); // Genera l'HTML per tutte le card nella lista
+  const cardsHTML = list.cards
+    .map((card) => createCardHTML(card, list.id))
+    .join(""); // Pass list.id to createCardHTML
 
   return `
     <div class="shrink-0 w-72" data-list-id="${list.id}">
@@ -71,6 +96,7 @@ export function renderBoard() {
 }
 
 export function updateListSelect() {
+  // Aggiorna le opzioni della select nei modali
   const select = document.getElementById("todo-list-select"); // Ottiene il riferimento alla select
   const lists = getLists();
 

@@ -1,11 +1,4 @@
-import {
-  addList,
-  deleteList,
-  addCard,
-  deleteCard,
-  moveCard,
-  getLists,
-} from "./state.js";
+import { addList, deleteList, addCard, deleteCard, moveCard } from "./state.js";
 import { updateListSelect } from "./render.js";
 
 export function initEvents() {
@@ -40,9 +33,10 @@ function handleBoardClick(e) {
     deleteCard(cardId);
   }
 
-  if (action === "move") {
+  if (action === "move-to-list") {
     const cardId = parseInt(e.target.closest("[data-card-id]").dataset.cardId);
-    handleMoveCard(cardId);
+    const targetListId = parseInt(e.target.dataset.targetList); // prende il valore dell'attributo data-target-list del bottone del dropdown cliccato
+    moveCard(cardId, targetListId);
   }
 
   if (action === "add-card") {
@@ -54,23 +48,6 @@ function handleBoardClick(e) {
     const listId = parseInt(e.target.closest("[data-list-id]").dataset.listId);
     if (confirm("Delete this list and all its cards?")) {
       deleteList(listId);
-    }
-  }
-}
-
-function handleMoveCard(cardId) {
-  const lists = getLists(); // Riceve riferimento all'array originale
-  const listNames = lists
-    .map((list, index) => `${index + 1}. ${list.name}`) // Crea elenco numerato con le liste
-    .join("\n");
-  const choice = prompt(`Move card to:\n${listNames}\n\nEnter list number:`);
-
-  if (choice) {
-    const index = parseInt(choice) - 1;
-    if (index >= 0 && index < lists.length) {
-      moveCard(cardId, lists[index].id);
-    } else {
-      alert("Invalid list number! Please enter a number from the list.");
     }
   }
 }
@@ -89,7 +66,6 @@ function openNewTodoModal(listId) {
   document.getElementById("todo-list-select").value = listId;
   document.getElementById("new-todo-modal").showModal();
 
-  // Clear form
   document.getElementById("todo-title-input").value = "";
   document.getElementById("todo-description-input").value = "";
   document.getElementById("todo-priority-select").value = "medium";
