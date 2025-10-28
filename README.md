@@ -32,13 +32,13 @@ Questa è una semplice applicazione web per gestire le proprie liste di cose da 
 	```bash
 	npm run dev
 	```
-4. Apri il link che appare nel terminale (di solito `http://localhost:5173`) nel browser.
+4. Apri il link che appare nel terminale nel browser.
 
 ### Utilizzo
 
 - Crea una nuova lista e aggiungi i tuoi Todo.
 - Puoi eliminare, spostare e modificare i Todo come preferisci.
-- Tutto viene salvato automaticamente: non serve fare nulla!
+- Tutto viene salvato automaticamente.
 
 ## Note
 
