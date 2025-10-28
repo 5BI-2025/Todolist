@@ -26,17 +26,17 @@ function createCardHTML(card, currentListId) {
     .join("");
 
   return `
-    <div class="bg-white rounded-md shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer" data-card-id="${
+    <div class="bg-white rounded-md shadow-sm p-4 hover:shadow-md transition-shadow cursor-pointer" data-card-id="${
       card.id
     }">
       <div class="flex items-start justify-between mb-2">
-        <h3 class="text-sm font-semibold text-gray-800">${card.title}</h3>
-        <span class="badge badge-xs ${priorityClass} border-0">${
+        <h3 class="text-base font-semibold text-gray-800">${card.title}</h3>
+        <span class="badge badge-sm ${priorityClass} border-0">${
     card.priority
   }</span>
       </div>
-      <p class="text-xs text-gray-500 mb-3">${card.description || ""}</p>
-      <div class="flex justify-end gap-1">
+      <p class="text-sm text-gray-600 mb-3">${card.description || ""}</p>
+      <div class="flex justify-end gap-2">
         <div class="dropdown dropdown-end">
           <button class="btn btn-xs bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100" data-action="move">
             Move ▾
@@ -62,11 +62,11 @@ function createListHTML(list) {
     .join(""); // Pass list.id to createCardHTML
 
   return `
-    <div class="shrink-0 w-72" data-list-id="${list.id}">
-      <div class="bg-gray-200 rounded-lg p-3">
+    <div class="shrink-0 w-80" data-list-id="${list.id}">
+      <div class="bg-gray-200 rounded-lg p-4">
         
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="font-semibold text-gray-800 text-sm px-2">${list.name}</h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-semibold text-gray-800 text-base px-2">${list.name}</h2>
           <div class="dropdown dropdown-end">
             <button class="btn btn-ghost btn-xs btn-square text-gray-600">⋮</button>
             <ul class="dropdown-content menu bg-white rounded-md z-10 w-40 p-2 shadow-lg border border-gray-200">
@@ -75,7 +75,7 @@ function createListHTML(list) {
           </div>
         </div>
 
-        <div class="space-y-2 mb-2" data-cards-container>
+        <div class="space-y-3 mb-3" data-cards-container>
           ${cardsHTML}
         </div>
 
