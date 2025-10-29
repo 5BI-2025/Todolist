@@ -73,7 +73,7 @@ export function moveCard(cardId, newListId) {
   let card = null;
 
   lists.forEach((list) => {
-    const index = list.cards.findIndex((c) => c.id === cardId);
+    const index = list.cards.findIndex((c) => c.id === cardId); // Cerca ogni todo(c) e controlla se ce un match di id
     if (index !== -1) {
       card = list.cards.splice(index, 1)[0]; // Rimuove la card dalla lista corrente
     }
